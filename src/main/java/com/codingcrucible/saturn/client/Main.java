@@ -53,6 +53,7 @@ public class Main {
     
     class HelloWorld implements Sender, Applier, Listener {
 
+        Message storedM;
         String name;
         Listener l;
         OperationalTransformation ot;
@@ -72,7 +73,7 @@ public class Main {
         public void send(Message m) {
             l.recieve(m);
         }
-            
+     
         @Override
         public void apply(Operation o) {
             System.out.print(name + ": ");
@@ -81,7 +82,11 @@ public class Main {
 
         @Override
         public void recieve(Message m) {
-            ot.recieve(m);
+           this.storedM = m;
+        }
+        
+        public void activateReceive(){
+            ot.recieve(storedM);
         }
         
         public void addListener(Listener l){
@@ -100,9 +105,18 @@ public class Main {
         
         server.generate(9);
         
-        server.generate(10);
+        client.activateReceive();
         
-        client.generate(7);
+         client.generate(10);
+        
+        server.activateReceive();
+        
+        client.generate(25);
+        
+        server.generate(42);
+        
+        client.activateReceive();
+        server.activateReceive();
         
         
     }
