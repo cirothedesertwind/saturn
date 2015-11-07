@@ -5,5 +5,6 @@
  */
 package com.codingcrucible.saturn;
 
-public interface Operation extends Runnable {
+public interface Listener {
+    void recieve(Message m);
 }
