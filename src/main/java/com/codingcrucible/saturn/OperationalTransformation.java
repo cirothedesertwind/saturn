@@ -42,19 +42,20 @@ public final class OperationalTransformation {
         Iterator<EnumeratedOpTuple> i = outgoingQueue.iterator();
         
         while(i.hasNext()){
-            EnumeratedOpTuple t = i.next();
-            if (t.getValue() < m.msgReceived)
+            EnumeratedOpTuple eot = i.next();
+            if (eot.getValue() < m.msgReceived)
                 i.remove();
         }
         
         /* Assert that msg.msgGenerated == msgReceived */
-        /*if (m.msgGenerated != msgRecieved.get()){
+        if (m.msgGenerated != msgRecieved.get()){
             System.err.println("Assert fails");
             return;
-        }*/
+        }
         
-        while(i.hasNext()){
-            EnumeratedOpTuple eot = i.next();
+        Iterator<EnumeratedOpTuple> i2 = outgoingQueue.iterator();
+        while(i2.hasNext()){
+            EnumeratedOpTuple eot = i2.next();
             CSTuple cst = t.xform(new CSTuple(m.op, eot.getOp()));
             m.op = cst.getServerOp();
             eot.setOp(cst.getClientOp());

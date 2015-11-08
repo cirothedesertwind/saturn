@@ -76,6 +76,12 @@ public class Main {
      
         @Override
         public void apply(Operation o) {
+            if  (o == null) //*act as no-op *//
+            {
+                System.out.print(name + ": No Change ");
+                return;
+            }
+            
             System.out.print(name + ": ");
             o.run();
         }
