@@ -56,7 +56,7 @@ public final class OperationalTransformation {
         Iterator<EnumeratedOpTuple> i2 = outgoingQueue.iterator();
         while(i2.hasNext()){
             EnumeratedOpTuple eot = i2.next();
-            CSTuple cst = t.xform(new CSTuple(m.op, eot.getOp()));
+            CSTuple cst = t.xform(new CSTuple(eot.getOp(), m.op));
             m.op = cst.getServerOp();
             eot.setOp(cst.getClientOp());
         }
