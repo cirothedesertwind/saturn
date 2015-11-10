@@ -87,10 +87,6 @@ public class Main {
         public void send(Message m) {
             l.recieve(m);
         }
-     
-        public void apply(Runnable o) {
-            o.run();
-        }
 
         public void recieve(Message m) {
            this.storedM = m;
