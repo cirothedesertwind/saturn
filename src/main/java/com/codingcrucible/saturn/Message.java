@@ -6,17 +6,17 @@
 package com.codingcrucible.saturn;
 
 public class Message {
-    Operation op;
+    Runnable op;
     int msgGenerated;
     int msgReceived;
 
-    public Message(Operation op, int msgGenerated, int msgReceived) {
+    public Message(Runnable op, int msgGenerated, int msgReceived) {
         this.op = op;
         this.msgGenerated = msgGenerated;
         this.msgReceived = msgReceived;
     }
     
-    public Message(Operation op, int msgGenerated) {
+    public Message(Runnable op, int msgGenerated) {
         this.op = op;
         this.msgGenerated = msgGenerated;
         this.msgReceived = -1;

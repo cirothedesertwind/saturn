@@ -7,19 +7,19 @@ package com.codingcrucible.saturn;
 
 public final class CSTuple {
 
-    private Operation clientOp;
-    private Operation serverOp;
+    private Runnable clientOp;
+    private Runnable serverOp;
 
-    public CSTuple(Operation clientOp, Operation serverOp) {
+    public CSTuple(Runnable clientOp, Runnable serverOp) {
         this.clientOp = clientOp;
         this.serverOp = serverOp;
     }
 
-    public Operation getClientOp() {
+    public Runnable getClientOp() {
         return clientOp;
     }
 
-    public Operation getServerOp() {
+    public Runnable getServerOp() {
         return serverOp;
     }
 

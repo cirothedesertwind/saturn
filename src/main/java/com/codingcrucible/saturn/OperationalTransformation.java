@@ -28,7 +28,7 @@ public final class OperationalTransformation {
         outgoingQueue = new ConcurrentLinkedQueue();
     }
     
-    public void generate(Operation op){
+    public void generate(Runnable op){
         a.apply(op);
         s.send(new Message(op, msgGenerated.get(), msgRecieved.get()));
         

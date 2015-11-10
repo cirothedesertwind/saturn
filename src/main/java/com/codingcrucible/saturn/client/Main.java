@@ -9,7 +9,6 @@ import com.codingcrucible.saturn.Applier;
 import com.codingcrucible.saturn.CSTuple;
 import com.codingcrucible.saturn.Listener;
 import com.codingcrucible.saturn.Message;
-import com.codingcrucible.saturn.Operation;
 import com.codingcrucible.saturn.OperationalTransformation;
 import com.codingcrucible.saturn.Sender;
 import com.codingcrucible.saturn.Transform;
@@ -20,7 +19,7 @@ import com.codingcrucible.saturn.Transform;
  */
 public class Main {
 
-    class Op implements Operation{
+    class Op implements Runnable {
         int writtenValue;
 
         private Op(int value) {
@@ -33,12 +32,18 @@ public class Main {
         }
     }
     
+     class NoOp implements Runnable {
+       
+        @Override
+        public void run() {}
+    }
+    
     
     class ServerWinsClientSide implements Transform {
 
         @Override
         public CSTuple xform(CSTuple t) {
-            return new CSTuple(null, t.getServerOp());
+            return new CSTuple(new NoOp(), t.getServerOp());
         }
     }
     
@@ -46,7 +51,7 @@ public class Main {
 
         @Override
         public CSTuple xform(CSTuple t) {
-            return new CSTuple(t.getClientOp(), null);
+            return new CSTuple(t.getClientOp(), new NoOp());
         }
     }
     
@@ -65,7 +70,7 @@ public class Main {
         }
         
         public void generate(int value){
-            Operation op = new Op(value);
+            Runnable op = new Op(value);
             ot.generate(op);
         }
         
@@ -73,8 +78,7 @@ public class Main {
             l.recieve(m);
         }
      
-        @Override
-        public void apply(Operation o) {
+        public void apply(Runnable o) {
             if  (o == null) //*act as no-op *//
             {
                 System.out.print(name + ": No Change ");

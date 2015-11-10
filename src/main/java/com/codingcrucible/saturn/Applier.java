@@ -7,5 +7,5 @@ package com.codingcrucible.saturn;
 
 
 public interface Applier {
-    void apply(Operation o);
+    void apply(Runnable o);
 }
