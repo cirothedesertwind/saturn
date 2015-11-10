@@ -20,22 +20,33 @@ import com.codingcrucible.saturn.Transform;
 public class Main {
 
     class Op implements Runnable {
+        String name;
         int writtenValue;
 
-        private Op(int value) {
+        private Op(String name, int value) {
+           this.name = name;
            this.writtenValue = value;
         }
 
         @Override
         public void run() {
+            System.out.print(name + ": ");
             System.out.println(writtenValue);
         }
     }
     
      class NoOp implements Runnable {
-       
+        String name;
+
+        private NoOp(String name) {
+           this.name = name;
+        }
+
         @Override
-        public void run() {}
+        public void run() {
+            System.out.print(name + ": ");
+            System.out.println("No Change");
+        }
     }
     
     
@@ -43,7 +54,7 @@ public class Main {
 
         @Override
         public CSTuple xform(CSTuple t) {
-            return new CSTuple(new NoOp(), t.getServerOp());
+            return new CSTuple(new NoOp("Client"), t.getServerOp());
         }
     }
     
@@ -51,7 +62,7 @@ public class Main {
 
         @Override
         public CSTuple xform(CSTuple t) {
-            return new CSTuple(t.getClientOp(), new NoOp());
+            return new CSTuple(t.getClientOp(), new NoOp("Server"));
         }
     }
     
@@ -70,7 +81,7 @@ public class Main {
         }
         
         public void generate(int value){
-            Runnable op = new Op(value);
+            Runnable op = new Op(name, value);
             ot.generate(op);
         }
         
@@ -79,13 +90,6 @@ public class Main {
         }
      
         public void apply(Runnable o) {
-            if  (o == null) //*act as no-op *//
-            {
-                System.out.print(name + ": No Change ");
-                return;
-            }
-            
-            System.out.print(name + ": ");
             o.run();
         }
 
