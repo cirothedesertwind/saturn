@@ -6,5 +6,6 @@
 package com.codingcrucible.saturn;
 
 public interface Transform {
-    CSTuple xform(CSTuple t);
+    /*returns client in index 0, server in index 1*/
+    Runnable[] xform(Runnable client, Runnable server);
 }

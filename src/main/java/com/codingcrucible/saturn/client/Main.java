@@ -5,7 +5,6 @@
  */
 package com.codingcrucible.saturn.client;
 
-import com.codingcrucible.saturn.CSTuple;
 import com.codingcrucible.saturn.Listener;
 import com.codingcrucible.saturn.Message;
 import com.codingcrucible.saturn.OperationalTransformation;
@@ -52,19 +51,18 @@ public class Main {
     class ServerWinsClientSide implements Transform {
 
         @Override
-        public CSTuple xform(CSTuple t) {
-            return new CSTuple(new NoOp("Client"), t.getServerOp());
+        public Runnable[] xform(Runnable client, Runnable server) {
+            return new Runnable[]{new NoOp("Client"), server};
         }
     }
     
     class ServerWinsServerSide implements Transform {
 
         @Override
-        public CSTuple xform(CSTuple t) {
-            return new CSTuple(t.getClientOp(), new NoOp("Server"));
+        public Runnable[] xform(Runnable client, Runnable server) {
+            return new Runnable[]{client, new NoOp("Server")};
         }
     }
-    
     
     class HelloWorld implements Sender, Listener {
 

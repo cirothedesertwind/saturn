@@ -54,9 +54,9 @@ public final class OperationalTransformation {
         Iterator<Message> i2 = outgoingQueue.iterator();
         while(i2.hasNext()){
             Message eot = i2.next();
-            CSTuple cst = t.xform(new CSTuple(eot.op, m.op));
-            m.op = cst.getServerOp();
-            eot.op = cst.getClientOp();
+            Runnable[] cst = t.xform(eot.op, m.op);
+            eot.op = cst[0];
+            m.op = cst[1];
         }
         
         m.op.run();
