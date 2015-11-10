@@ -16,12 +16,10 @@ public final class OperationalTransformation {
     private final AtomicInteger msgGenerated;
     private final AtomicInteger msgRecieved;
     private final Queue<Message> outgoingQueue;
-    private final Applier a;
     private final Sender s;
 
-    public OperationalTransformation(Transform t, Applier a, Sender s) {
+    public OperationalTransformation(Transform t, Sender s) {
         this.t = t;
-        this.a = a;
         this.s = s;
         msgGenerated = new AtomicInteger(0);
         msgRecieved = new AtomicInteger(0);
@@ -29,7 +27,7 @@ public final class OperationalTransformation {
     }
     
     public void generate(Runnable op){
-        a.apply(op);
+        op.run();
         s.send(new Message(op, msgGenerated.get(), msgRecieved.get()));
         
         /*add to outgoing messages */
@@ -61,7 +59,7 @@ public final class OperationalTransformation {
             eot.op = cst.getClientOp();
         }
         
-        a.apply(m.op);
+        m.op.run();
         msgRecieved.incrementAndGet();
             
     }

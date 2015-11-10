@@ -5,7 +5,6 @@
  */
 package com.codingcrucible.saturn.client;
 
-import com.codingcrucible.saturn.Applier;
 import com.codingcrucible.saturn.CSTuple;
 import com.codingcrucible.saturn.Listener;
 import com.codingcrucible.saturn.Message;
@@ -67,7 +66,7 @@ public class Main {
     }
     
     
-    class HelloWorld implements Sender, Applier, Listener {
+    class HelloWorld implements Sender, Listener {
 
         Message storedM;
         String name;
@@ -77,7 +76,7 @@ public class Main {
         public HelloWorld(String name, Transform t, Listener l) {
             this.name = name;
             this.l = l;
-            ot = new OperationalTransformation(t, this, this);
+            ot = new OperationalTransformation(t, this);
         }
         
         public void generate(int value){
