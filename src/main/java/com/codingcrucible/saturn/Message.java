@@ -15,4 +15,10 @@ public class Message {
         this.msgGenerated = msgGenerated;
         this.msgReceived = msgReceived;
     }
+    
+    public Message(Operation op, int msgGenerated) {
+        this.op = op;
+        this.msgGenerated = msgGenerated;
+        this.msgReceived = -1;
+    }
 }

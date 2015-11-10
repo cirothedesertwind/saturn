@@ -69,7 +69,6 @@ public class Main {
             ot.generate(op);
         }
         
-        @Override
         public void send(Message m) {
             l.recieve(m);
         }
@@ -86,7 +85,6 @@ public class Main {
             o.run();
         }
 
-        @Override
         public void recieve(Message m) {
            this.storedM = m;
         }
@@ -98,7 +96,6 @@ public class Main {
         public void addListener(Listener l){
             this.l = l;
         }
-        
     }
 
     public Main() {

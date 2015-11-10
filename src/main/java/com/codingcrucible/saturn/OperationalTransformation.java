@@ -15,7 +15,7 @@ public final class OperationalTransformation {
     private final Transform t;
     private final AtomicInteger msgGenerated;
     private final AtomicInteger msgRecieved;
-    private final Queue<EnumeratedOpTuple> outgoingQueue;
+    private final Queue<Message> outgoingQueue;
     private final Applier a;
     private final Sender s;
 
@@ -33,17 +33,17 @@ public final class OperationalTransformation {
         s.send(new Message(op, msgGenerated.get(), msgRecieved.get()));
         
         /*add to outgoing messages */
-        outgoingQueue.add(new EnumeratedOpTuple(op, msgGenerated.get()));
+        outgoingQueue.add(new Message(op, msgGenerated.get()));
         msgGenerated.incrementAndGet();
     }
     
     public void recieve(Message m){
         /* discard acknowledged messages */
-        Iterator<EnumeratedOpTuple> i = outgoingQueue.iterator();
+        Iterator<Message> i = outgoingQueue.iterator();
         
         while(i.hasNext()){
-            EnumeratedOpTuple eot = i.next();
-            if (eot.getValue() < m.msgReceived)
+            Message eot = i.next();
+            if (eot.msgGenerated < m.msgReceived)
                 i.remove();
         }
         
@@ -53,12 +53,12 @@ public final class OperationalTransformation {
             return;
         }
         
-        Iterator<EnumeratedOpTuple> i2 = outgoingQueue.iterator();
+        Iterator<Message> i2 = outgoingQueue.iterator();
         while(i2.hasNext()){
-            EnumeratedOpTuple eot = i2.next();
-            CSTuple cst = t.xform(new CSTuple(eot.getOp(), m.op));
+            Message eot = i2.next();
+            CSTuple cst = t.xform(new CSTuple(eot.op, m.op));
             m.op = cst.getServerOp();
-            eot.setOp(cst.getClientOp());
+            eot.op = cst.getClientOp();
         }
         
         a.apply(m.op);
