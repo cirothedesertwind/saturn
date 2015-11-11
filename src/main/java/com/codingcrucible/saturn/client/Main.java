@@ -17,32 +17,23 @@ import com.codingcrucible.saturn.Transform;
 public class Main {
 
     class Op implements Runnable {
-        String name;
         int writtenValue;
 
-        private Op(String name, int value) {
-           this.name = name;
+        private Op(int value) {
            this.writtenValue = value;
         }
 
         @Override
         public void run() {
-            System.out.print(name + ": ");
             System.out.println(writtenValue);
         }
     }
     
-     class NoOp implements Runnable {
-        String name;
-
-        private NoOp(String name) {
-           this.name = name;
-        }
+    final static class NoOp implements Runnable {
 
         @Override
         public void run() {
-            System.out.print(name + ": ");
-            System.out.println("No Change");
+            System.out.println("No change");
         }
     }
     
@@ -51,7 +42,7 @@ public class Main {
 
         @Override
         public Runnable[] xform(Runnable client, Runnable server) {
-            return new Runnable[]{new NoOp("Client"), server};
+            return new Runnable[]{new NoOp(), server};
         }
     }
     
@@ -59,7 +50,7 @@ public class Main {
 
         @Override
         public Runnable[] xform(Runnable client, Runnable server) {
-            return new Runnable[]{client, new NoOp("Server")};
+            return new Runnable[]{client, new NoOp()};
         }
     }
     
@@ -77,7 +68,8 @@ public class Main {
         }
         
         public void generate(int value){
-            Runnable op = new Op(name, value);
+            Runnable op = new Op(value);
+            System.out.println(name + "sends:");
             ot.generate(op);
         }
         
@@ -90,6 +82,7 @@ public class Main {
         }
         
         public void activateReceive(){
+            System.out.println(name + "receives:");
             ot.recieve(storedM);
         }
         
