@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.codingcrucible.saturn;
+package com.codingcrucible.saturn.client;
+
+import com.codingcrucible.saturn.Message;
 
 public interface Listener {
     void recieve(Message m);

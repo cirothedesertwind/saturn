@@ -5,7 +5,6 @@
  */
 package com.codingcrucible.saturn.client;
 
-import com.codingcrucible.saturn.Listener;
 import com.codingcrucible.saturn.Message;
 import com.codingcrucible.saturn.OperationalTransformation;
 import com.codingcrucible.saturn.Sender;
