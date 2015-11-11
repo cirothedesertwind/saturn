@@ -36,12 +36,13 @@ public final class OperationalTransformation {
     }
     
     public void recieve(Message m){
+        Message v;
         /* discard acknowledged messages */
         Iterator<Message> i = outgoingQueue.iterator();
         
         while(i.hasNext()){
-            Message eot = i.next();
-            if (eot.msgGenerated < m.msgReceived)
+            v = i.next();
+            if (v.msgGenerated < m.msgReceived)
                 i.remove();
         }
         
@@ -53,9 +54,9 @@ public final class OperationalTransformation {
         
         Iterator<Message> i2 = outgoingQueue.iterator();
         while(i2.hasNext()){
-            Message eot = i2.next();
-            Runnable[] cst = t.xform(eot.op, m.op);
-            eot.op = cst[0];
+            v = i2.next();
+            Runnable[] cst = t.xform(v.op, m.op);
+            v.op = cst[0];
             m.op = cst[1];
         }
         
