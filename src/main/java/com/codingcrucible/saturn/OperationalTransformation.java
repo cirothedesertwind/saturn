@@ -16,11 +16,11 @@ public final class OperationalTransformation {
     private final AtomicInteger msgGenerated;
     private final AtomicInteger msgRecieved;
     private final Queue<Message> outgoingQueue;
-    private final Sender s;
+    private final Client c;
 
-    public OperationalTransformation(Transform t, Sender s) {
+    public OperationalTransformation(Transform t, Client c) {
         this.t = t;
-        this.s = s;
+        this.c = c;
         msgGenerated = new AtomicInteger(0);
         msgRecieved = new AtomicInteger(0);
         outgoingQueue = new ConcurrentLinkedQueue();
@@ -28,7 +28,7 @@ public final class OperationalTransformation {
     
     public void generate(Runnable op){
         op.run();
-        s.send(new Message(op, msgGenerated.get(), msgRecieved.get()));
+        c.send(new Message(op, msgGenerated.get(), msgRecieved.get()));
         
         /*add to outgoing messages */
         outgoingQueue.add(new Message(op, msgGenerated.get()));

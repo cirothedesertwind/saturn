@@ -7,7 +7,7 @@ package com.codingcrucible.saturn.client;
 
 import com.codingcrucible.saturn.Message;
 import com.codingcrucible.saturn.OperationalTransformation;
-import com.codingcrucible.saturn.Sender;
+import com.codingcrucible.saturn.Client;
 import com.codingcrucible.saturn.Transform;
 
 /**
@@ -54,7 +54,7 @@ public class Main {
         }
     }
     
-    class HelloWorld implements Sender, Listener {
+    class HelloWorld implements Client, Listener {
 
         Message storedM;
         String name;
