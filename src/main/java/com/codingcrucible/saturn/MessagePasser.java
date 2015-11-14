@@ -5,7 +5,7 @@
  */
 package com.codingcrucible.saturn;
 
-public interface Transform<E> {
-    /*returns client in index 0, server in index 1*/
-    E[] xform(E client, E server);
+public interface MessagePasser<E> {
+    void sendToAll(Message<E> m);
+    void echoToAll(MessageConsumer<E> exclude, Message<E> m);
 }

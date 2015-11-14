@@ -6,8 +6,11 @@
 package com.codingcrucible.saturn.client;
 
 import com.codingcrucible.saturn.Message;
-import com.codingcrucible.saturn.OperationalTransformation;
-import com.codingcrucible.saturn.Client;
+import com.codingcrucible.saturn.MessageConsumer;
+import com.codingcrucible.saturn.MessagePasserImpl;
+import com.codingcrucible.saturn.Node;
+import com.codingcrucible.saturn.OperationConsumer;
+import com.codingcrucible.saturn.OperationalTransform;
 import com.codingcrucible.saturn.Transform;
 
 /**
@@ -15,14 +18,15 @@ import com.codingcrucible.saturn.Transform;
  * @author aurix
  */
 public class Main {
-
+    
     class Op implements Runnable {
+
         int writtenValue;
-
+        
         private Op(int value) {
-           this.writtenValue = value;
+            this.writtenValue = value;
         }
-
+        
         @Override
         public void run() {
             System.out.println(writtenValue);
@@ -30,80 +34,145 @@ public class Main {
     }
     
     final static class NoOp implements Runnable {
-
+        
         @Override
         public void run() {
             System.out.println("No change");
         }
     }
     
-    
-    class ServerWinsClientSide implements Transform {
-
+    class ServerWinsClientSide implements Transform<Runnable> {
+        
         @Override
         public Runnable[] xform(Runnable client, Runnable server) {
             return new Runnable[]{new NoOp(), server};
         }
     }
     
-    class ServerWinsServerSide implements Transform {
-
+    class ServerWinsServerSide implements Transform<Runnable> {
+        
         @Override
         public Runnable[] xform(Runnable client, Runnable server) {
             return new Runnable[]{client, new NoOp()};
         }
     }
     
-    class HelloWorld implements Client, Listener {
-
-        Message storedM;
+    class HelloWorldServer implements MessageConsumer<Runnable>, OperationConsumer<Runnable> {
+        
+        Transform<Runnable> t;
+        MessagePasserImpl p;
+        Message<Runnable> storedM;
         String name;
-        Listener l;
-        OperationalTransformation ot;
-
-        public HelloWorld(String name, Transform t, Listener l) {
+        Node node;
+        
+        public HelloWorldServer(String name, Transform t) {
+            p = new MessagePasserImpl(true);
             this.name = name;
-            this.l = l;
-            ot = new OperationalTransformation(t, this);
+            this.t = t;
         }
         
-        public void generate(int value){
+        public void init() {
+            node = OperationalTransform.createServer(0, this, p, t);
+        }
+        
+        public void addClient(MessageConsumer<Runnable> c) {
+            p.getClients().add(c);
+        }
+        
+        public void generate(int value) {
             Runnable op = new Op(value);
             System.out.println(name + "sends:");
-            ot.generate(op);
+            node.generate(op);
         }
         
-        public void send(Message m) {
-            l.recieve(m);
-        }
-
-        public void recieve(Message m) {
-           this.storedM = m;
+        @Override
+        public void consume(Message<Runnable> m) {
+            this.storedM = m;
         }
         
-        public void activateReceive(){
+        public void activateReceive() {
             System.out.println(name + "receives:");
-            ot.recieve(storedM);
+            node.consume(storedM);
         }
         
-        public void addListener(Listener l){
-            this.l = l;
+        @Override
+        public void consume(Runnable r) {
+            r.run();
         }
-    }
 
+        @Override
+        public int getGuid() {
+            return 0;
+        }
+        
+    }
+    
+    class HelloWorldClient implements MessageConsumer<Runnable>, OperationConsumer<Runnable> {
+        
+        Transform t;
+        Message storedM;
+        String name;
+        Node node;
+        MessageConsumer<Runnable> server;
+        
+        public HelloWorldClient(String name, Transform t, MessageConsumer<Runnable> server) {
+            this.server = server;
+            this.name = name;
+            this.t = t;
+        }
+        
+        public void init() {
+            node = OperationalTransform.createClient(1, this, server, t);
+        }
+        
+        public void generate(int value) {
+            Runnable op = new Op(value);
+            System.out.println(name + "sends:");
+            node.generate(op);
+        }
+        
+        @Override
+        public void consume(Message m) {
+            this.storedM = m;
+        }
+        
+        public void activateReceive() {
+            System.out.println(name + "receives:");
+            node.consume(storedM);
+        }
+        
+        @Override
+        public void consume(Runnable r) {
+            r.run();
+        }
+
+      
+        @Override
+        public int getGuid() {
+            return 1;
+        }
+        
+    }
+    
     public Main() {
         
-        HelloWorld client, server;
-        server = new HelloWorld("server", new ServerWinsServerSide(), null);
-        client = new HelloWorld("client", new ServerWinsClientSide(), server);
-        server.addListener(client);
+        HelloWorldServer server;
+        HelloWorldClient client;
+        server = new HelloWorldServer("server", new ServerWinsServerSide());
         
+        server.init();
+        
+        client = new HelloWorldClient("client", new ServerWinsClientSide(), server);
+        
+        server.addClient(client);
+        
+        client.init();
         
         server.generate(9);
         
         client.activateReceive();
         
-         client.generate(10);
+        client.generate(10);
         
         server.activateReceive();
         
@@ -114,11 +183,8 @@ public class Main {
         client.activateReceive();
         server.activateReceive();
         
-        
     }
 
-    
-    
     /**
      * @param args the command line arguments
      */
@@ -126,8 +192,6 @@ public class Main {
         // TODO code application logic here
 
         Main m = new Main();
-        
-        
         
     }
     

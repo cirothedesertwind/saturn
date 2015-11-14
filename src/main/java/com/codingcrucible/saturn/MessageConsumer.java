@@ -5,7 +5,9 @@
  */
 package com.codingcrucible.saturn;
 
-public interface Transform<E> {
-    /*returns client in index 0, server in index 1*/
-    E[] xform(E client, E server);
+public interface MessageConsumer<E> {
+    void consume(Message<E> m);
+    
+    int getGuid();
+    
 }

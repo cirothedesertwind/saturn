@@ -5,20 +5,17 @@
  */
 package com.codingcrucible.saturn;
 
-public class Message {
-    Runnable op;
+public class Message<E> {
+    MessageConsumer<E> node;
+    E op;
     int msgGenerated;
     int msgReceived;
 
-    public Message(Runnable op, int msgGenerated, int msgReceived) {
+    Message(MessageConsumer<E> node, E op, int msgGenerated, int msgReceived) {
+        this.node = node;
         this.op = op;
         this.msgGenerated = msgGenerated;
         this.msgReceived = msgReceived;
     }
     
-    public Message(Runnable op, int msgGenerated) {
-        this.op = op;
-        this.msgGenerated = msgGenerated;
-        this.msgReceived = -1;
-    }
 }
