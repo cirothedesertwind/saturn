@@ -157,31 +157,37 @@ public class Main {
     public Main() {
         
         HelloWorldServer server;
-        HelloWorldClient client;
+        HelloWorldClient client1, client2;
         server = new HelloWorldServer("server", new ServerWinsServerSide());
         
         server.init();
         
-        client = new HelloWorldClient("client", new ServerWinsClientSide(), server);
+        client1 = new HelloWorldClient("client1", new ServerWinsClientSide(), server);
+        client2 = new HelloWorldClient("client2", new ServerWinsClientSide(), server);
         
-        server.addClient(client);
+        server.addClient(client1);
+        server.addClient(client2);
         
-        client.init();
+        client1.init();
+        client2.init();
         
         server.generate(9);
         
-        client.activateReceive();
+        client1.activateReceive();
+        client2.activateReceive();
         
-        client.generate(10);
+        client1.generate(10);
         
         server.activateReceive();
+        client2.activateReceive();
         
-        client.generate(25);
+        client1.generate(25);
         
         server.generate(42);
         
-        client.activateReceive();
+        client1.activateReceive();
         server.activateReceive();
+        client2.activateReceive();
         
     }
 
