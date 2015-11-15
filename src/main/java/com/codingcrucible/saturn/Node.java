@@ -67,13 +67,9 @@ public final class Node<E> implements MessageConsumer<E> {
                 i.remove();
         }
 
-        /* Assert that msg.msgGenerated == msgReceived */
-        
-        System.out.println(m.msgGenerated);
-        System.out.println(msgRecieved.get());
-        if (m.msgGenerated != msgRecieved.get()) {
-            System.err.println("Assert fails");
-         //   return;
+        if (m.msgGenerated > msgRecieved.get()) {
+            System.err.println("Assert fails: This node hasn't received all messages");
+            return;
         }
 
         Iterator<Message<E>> i2 = outgoingQueue.iterator();
