@@ -12,6 +12,9 @@ import com.codingcrucible.saturn.Node;
 import com.codingcrucible.saturn.OperationConsumer;
 import com.codingcrucible.saturn.OperationalTransform;
 import com.codingcrucible.saturn.Transform;
+import java.util.Iterator;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -59,6 +62,7 @@ public class Main {
     
     class HelloWorldServer implements MessageConsumer<Runnable>, OperationConsumer<Runnable> {
         
+        Queue<Message<Runnable>> storedMessages;
         Transform<Runnable> t;
         MessagePasserImpl p;
         Message<Runnable> storedM;
@@ -66,6 +70,7 @@ public class Main {
         Node node;
         
         public HelloWorldServer(String name, Transform t) {
+            storedMessages = new ConcurrentLinkedQueue<>();
             p = new MessagePasserImpl(true);
             this.name = name;
             this.t = t;
@@ -87,12 +92,17 @@ public class Main {
         
         @Override
         public void consume(Message<Runnable> m) {
-            this.storedM = m;
+            storedMessages.add(m);
         }
         
-        public void activateReceive() {
-            System.out.println(name + "receives:");
-            node.consume(storedM);
+       public void activateReceive() {
+            Iterator<Message<Runnable>> i = storedMessages.iterator();
+            while(i.hasNext()){
+                Message<Runnable> m = i.next();
+                System.out.println(name + "receives:");
+                node.consume(m);
+                i.remove();
+            }
         }
         
         @Override
@@ -111,12 +121,13 @@ public class Main {
         
         int guid;
         Transform t;
-        Message storedM;
+        Queue<Message<Runnable>> storedMessages;
         String name;
         Node node;
         MessageConsumer<Runnable> server;
         
         public HelloWorldClient(String name, int guid, Transform t, MessageConsumer<Runnable> server) {
+            storedMessages = new ConcurrentLinkedQueue<>();
             this.server = server;
             this.name = name;
             this.t = t;
@@ -134,13 +145,18 @@ public class Main {
         }
         
         @Override
-        public void consume(Message m) {
-            this.storedM = m;
+        public void consume(Message<Runnable> m) {
+            storedMessages.add(m);
         }
         
         public void activateReceive() {
-            System.out.println(name + "receives:");
-            node.consume(storedM);
+            Iterator<Message<Runnable>> i = storedMessages.iterator();
+            while(i.hasNext()){
+                Message<Runnable> m = i.next();
+                System.out.println(name + "receives:");
+                node.consume(m);
+                i.remove();
+            }
         }
         
         @Override
@@ -191,6 +207,8 @@ public class Main {
         server.activateReceive();
         client2.activateReceive();
         
+        
+        client1.generate(64);
     }
 
     /**
