@@ -12,13 +12,13 @@ public final class OperationalTransform {
     
     public static final Node createClient(int guid, OperationConsumer oc, 
             MessageConsumer target, Transform t){
-        return new Node(guid, oc, 
+        return new NodeImpl(guid, oc, 
                 new MessagePasserImpl(target, false), t);
     }
     
     public static final Node createServer(int guid, OperationConsumer oc, 
             MessagePasser p, Transform t){
-        return new Node(guid, oc, p, t);
+        return new NodeImpl(guid, oc, p, t);
     }
     
 }
