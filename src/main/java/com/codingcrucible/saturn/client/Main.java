@@ -7,10 +7,10 @@ package com.codingcrucible.saturn.client;
 
 import com.codingcrucible.saturn.Message;
 import com.codingcrucible.saturn.MessageConsumer;
-import com.codingcrucible.saturn.MessagePasserImpl;
 import com.codingcrucible.saturn.Node;
 import com.codingcrucible.saturn.OperationConsumer;
 import com.codingcrucible.saturn.OperationalTransform;
+import com.codingcrucible.saturn.ServerMessagePasser;
 import com.codingcrucible.saturn.Transform;
 import java.util.Iterator;
 import java.util.Queue;
@@ -64,14 +64,14 @@ public class Main {
         
         Queue<Message<Runnable>> storedMessages;
         Transform<Runnable> t;
-        MessagePasserImpl p;
+        ServerMessagePasser p;
         Message<Runnable> storedM;
         String name;
         Node node;
         
         public HelloWorldServer(String name, Transform t) {
             storedMessages = new ConcurrentLinkedQueue<>();
-            p = new MessagePasserImpl(true);
+            p = OperationalTransform.createServerMessagePasser();
             this.name = name;
             this.t = t;
         }

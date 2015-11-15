@@ -3,22 +3,23 @@ package com.codingcrucible.saturn;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class MessagePasserImpl<E> implements MessagePasser<E> {
+final class MessagePasserImpl<E> implements ServerMessagePasser<E> {
 
     boolean echo;
     List<MessageConsumer> clients;
 
-    public MessagePasserImpl(boolean echo) {
+    MessagePasserImpl(boolean echo) {
         this.echo = echo;
         clients = new CopyOnWriteArrayList<>();
     }
 
-    public MessagePasserImpl(MessageConsumer c, boolean echo) {
+    MessagePasserImpl(MessageConsumer c, boolean echo) {
         this.echo = echo;
         clients = new CopyOnWriteArrayList<>();
         clients.add(c);
     }
 
+    @Override
     public List<MessageConsumer> getClients() {
         return clients;
     }

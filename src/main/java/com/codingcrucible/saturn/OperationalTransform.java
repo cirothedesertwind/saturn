@@ -21,4 +21,7 @@ public final class OperationalTransform {
         return new NodeImpl(guid, oc, p, t);
     }
     
+    public static final ServerMessagePasser createServerMessagePasser(){
+        return new MessagePasserImpl(true);
+    }
 }
