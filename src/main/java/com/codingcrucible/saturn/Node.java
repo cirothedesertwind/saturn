@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.codingcrucible.saturn;
 
 import java.util.Iterator;
@@ -67,6 +62,14 @@ public final class Node<E> implements MessageConsumer<E> {
                 i.remove();
         }
 
+        /* Assert that the messages that another client has made is not
+           more than those received by this client. Otherwise the client
+           hasn't received everything in the correct order.
+        
+           The original paper asserts an equality, but this has multiple clients
+           generating different numbers of messages and I don't think it's
+           necessary to store the number of messages sent for each client.
+        */
         if (m.msgGenerated > msgRecieved.get()) {
             System.err.println("Assert fails: This node hasn't received all messages");
             return;
@@ -91,7 +94,6 @@ public final class Node<E> implements MessageConsumer<E> {
     }
     
     private Message echoMessage(MessageConsumer<E> client, E o){
-        //msgGenerated.incrementAndGet();
         return new Message(client, o, msgGenerated.get(), msgRecieved.get());
     }
 
