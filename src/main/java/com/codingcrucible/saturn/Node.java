@@ -16,7 +16,7 @@ public final class Node<E> implements MessageConsumer<E> {
     private final AtomicInteger msgRecieved;
     private final Queue<Message<E>> outgoingQueue;
 
-    public Node(int guid, OperationConsumer<E> oc,
+    Node(int guid, OperationConsumer<E> oc,
             MessagePasser mc, Transform<E> t) {
         this.guid = guid;
         this.oc = oc;
