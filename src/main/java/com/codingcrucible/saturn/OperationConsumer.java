@@ -7,5 +7,4 @@ package com.codingcrucible.saturn;
 
 public interface OperationConsumer<E> {
     void consume(E o);
-    int getGuid();
 }

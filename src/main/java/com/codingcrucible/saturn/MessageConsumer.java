@@ -7,7 +7,5 @@ package com.codingcrucible.saturn;
 
 public interface MessageConsumer<E> {
     void consume(Message<E> m);
-    
     int getGuid();
-    
 }
