@@ -43,10 +43,10 @@ public final class Node<E> implements MessageConsumer<E> {
 
     public void generate(E op) {
         oc.consume(op);
-        mc.sendToAll(createMessage(op));
+        mc.sendToAll(createMessage(this, op));
 
         /*add to outgoing messages */
-        outgoingQueue.add(createMessage(op));
+        outgoingQueue.add(createMessage(this, op));
         msgGenerated.incrementAndGet();
     }
 
@@ -84,16 +84,12 @@ public final class Node<E> implements MessageConsumer<E> {
         }
 
         oc.consume(m.op);
-        mc.echoToAll(m.node, echoMessage(m.node, m.op));
+        mc.echoToAll(m.node, createMessage(m.node, m.op));
         msgRecieved.incrementAndGet();
 
     }
 
-    private Message createMessage(E o) {
-        return new Message(this, o, msgGenerated.get(), msgRecieved.get());
-    }
-    
-    private Message echoMessage(MessageConsumer<E> client, E o){
+    private Message createMessage(MessageConsumer<E> client, E o){
         return new Message(client, o, msgGenerated.get(), msgRecieved.get());
     }
 
