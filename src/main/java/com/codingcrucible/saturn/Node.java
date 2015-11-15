@@ -68,9 +68,12 @@ public final class Node<E> implements MessageConsumer<E> {
         }
 
         /* Assert that msg.msgGenerated == msgReceived */
+        
+        System.out.println(m.msgGenerated);
+        System.out.println(msgRecieved.get());
         if (m.msgGenerated != msgRecieved.get()) {
             System.err.println("Assert fails");
-            return;
+         //   return;
         }
 
         Iterator<Message<E>> i2 = outgoingQueue.iterator();
@@ -82,13 +85,18 @@ public final class Node<E> implements MessageConsumer<E> {
         }
 
         oc.consume(m.op);
-        mc.echoToAll(m.node, m);
+        mc.echoToAll(m.node, echoMessage(m.node, m.op));
         msgRecieved.incrementAndGet();
 
     }
 
     private Message createMessage(E o) {
         return new Message(this, o, msgGenerated.get(), msgRecieved.get());
+    }
+    
+    private Message echoMessage(MessageConsumer<E> client, E o){
+        //msgGenerated.incrementAndGet();
+        return new Message(client, o, msgGenerated.get(), msgRecieved.get());
     }
 
     @Override

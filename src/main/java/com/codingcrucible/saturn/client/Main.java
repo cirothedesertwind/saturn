@@ -109,20 +109,22 @@ public class Main {
     
     class HelloWorldClient implements MessageConsumer<Runnable>, OperationConsumer<Runnable> {
         
+        int guid;
         Transform t;
         Message storedM;
         String name;
         Node node;
         MessageConsumer<Runnable> server;
         
-        public HelloWorldClient(String name, Transform t, MessageConsumer<Runnable> server) {
+        public HelloWorldClient(String name, int guid, Transform t, MessageConsumer<Runnable> server) {
             this.server = server;
             this.name = name;
             this.t = t;
+            this.guid = guid;
         }
         
         public void init() {
-            node = OperationalTransform.createClient(1, this, server, t);
+            node = OperationalTransform.createClient(guid, this, server, t);
         }
         
         public void generate(int value) {
@@ -149,7 +151,7 @@ public class Main {
       
         @Override
         public int getGuid() {
-            return 1;
+            return guid;
         }
         
     }
@@ -162,8 +164,8 @@ public class Main {
         
         server.init();
         
-        client1 = new HelloWorldClient("client1", new ServerWinsClientSide(), server);
-        client2 = new HelloWorldClient("client2", new ServerWinsClientSide(), server);
+        client1 = new HelloWorldClient("client1", 1, new ServerWinsClientSide(), server);
+        client2 = new HelloWorldClient("client2", 2, new ServerWinsClientSide(), server);
         
         server.addClient(client1);
         server.addClient(client2);
@@ -196,7 +198,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-
         Main m = new Main();
         
     }
